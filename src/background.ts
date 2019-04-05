@@ -1,23 +1,44 @@
-const CANNED_RESPONSE = 'lol wut'
+type ListenerFunction = (details: { requestId: any }) => object
 
-function listener(details: { requestId: any }) {
-  let filter: any = browser.webRequest.filterResponseData(details.requestId)
-  let encoder = new TextEncoder()
+function listenerFactory(replacement: string): ListenerFunction {
+  return function listener(details: { requestId: any }) {
+    let filter: any = browser.webRequest.filterResponseData(details.requestId)
+    let encoder = new TextEncoder()
+    let hasRun = false
 
-  filter.ondata = () => {
-    filter.write(encoder.encode(CANNED_RESPONSE))
-    filter.disconnect()
+    filter.ondata = () => {
+      if (!hasRun) {
+        filter.write(encoder.encode(replacement))
+        hasRun = true
+      }
+    }
+
+    filter.onstop = () => {
+      filter.disconnect()
+    }
+
+    return { }
   }
-
-  return { }
 }
 
-browser.webRequest.onBeforeRequest.addListener(
-  listener,
-  { urls: [ '<all_urls>' ], types: [ 'main_frame' ] },
-  [ 'blocking' ]
-)
+let listener: ListenerFunction
 
 browser.runtime.onMessage.addListener((req, sender, sendResponse) => {
-  console.log('got message', req)
+  console.log('message received', req)
+  if (listener) {
+    browser.webRequest.onBeforeRequest.removeListener(listener)
+  }
+
+  listener = listenerFactory(req.replacement)
+
+  if (!req.pattern) {
+    return
+  }
+
+  console.log(`add intercept for ${req.pattern} -> ${req.replacement}`)
+  browser.webRequest.onBeforeRequest.addListener(
+    listener,
+    { urls: [ req.pattern ], types: [ 'main_frame' ] },
+    [ 'blocking' ]
+  )
 })
