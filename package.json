@@ -1,0 +1,12 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc -w"
+  },
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^67.0.0",
+    "typescript": "^3.4.1"
+  }
+}
