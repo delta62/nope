@@ -24,7 +24,6 @@ function listenerFactory(replacement: string): ListenerFunction {
 let listener: ListenerFunction
 
 browser.runtime.onMessage.addListener((req, sender, sendResponse) => {
-  console.log('message received', req)
   if (listener) {
     browser.webRequest.onBeforeRequest.removeListener(listener)
   }

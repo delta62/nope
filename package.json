@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "tsc -w"
+    "start": "webpack-dev-server",
+    "build": "webpack"
   },
   "devDependencies": {
     "@types/firefox-webext-browser": "^67.0.0",
-    "typescript": "^3.4.1"
+    "@types/redux": "^3.6.0",
+    "preact": "^8.4.2",
+    "redux": "^4.0.1",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.4.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.2.1"
   }
 }
