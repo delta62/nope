@@ -2,11 +2,10 @@ const path = require('path')
 
 module.exports = {
   mode: 'development',
-  context: path.resolve(__dirname, 'src'),
   entry: {
-    background: './background.ts',
-    devtools: './devtools.ts',
-    panel: './panel.tsx'
+    background: './src/background.ts',
+    devtools: './src/devtools.ts',
+    panel: './src/panel.tsx'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -14,7 +13,8 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: 'ts-loader' }
+      { test: /\.tsx?$/, loader: 'ts-loader' },
+      { test: /\.css$/, use: [ 'style-loader', 'css-loader' ] }
     ]
   },
   resolve: {
